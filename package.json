@@ -1,0 +1,44 @@
+{
+  "name": "cloudant-non-vcap",
+  "version": "0.0.1",
+  "description": "Cloudant Non-Vcapservices",
+  "author": "Ippei SUZUKI",
+  "private": true,
+  "engines": {
+    "node": "8.9.4"
+  },
+  "config": {
+    "api_endpoint": "https://api.ng.bluemix.net",
+    "app_name": "cloudant-non-vcap-ippei0605",
+    "cloudant_name": "cloudant-ippei0605",
+    "db_name": "alice",
+    "doc_name": "rabbit",
+    "cloudant_key": "cloudant_key",
+    "cloudant_creds": "CLOUDANT_CREDS"
+  },
+  "scripts": {
+    "login": "ibmcloud login -a $npm_package_config_api_endpoint && ibmcloud target --cf",
+    "service-create": "ibmcloud resource service-instance-create $npm_package_config_cloudant_name cloudant lite us-south",
+    "service-delete": "ibmcloud resource service-instance-delete $npm_package_config_cloudant_name -f",
+    "service-key-create": "ibmcloud resource service-key-create $npm_package_config_cloudant_key Manager --instance-name $npm_package_config_cloudant_name",
+    "service-key-delete": "ibmcloud resource service-key-delete $npm_package_config_cloudant_key -f",
+    "delete": "ibmcloud app delete $npm_package_config_app_name -f",
+    "push-no-start": "ibmcloud app push $npm_package_config_app_name -k 1G -m 128M --no-start",
+    "env-set-cloudant": "node ./command/env-set $npm_package_config_app_name $npm_package_config_cloudant_key $npm_package_config_cloudant_creds",
+    "push": "ibmcloud app push $npm_package_config_app_name",
+    "logs": "ibmcloud app logs $npm_package_config_app_name --recent",
+    "postinstall": "node postinstall",
+    "start": "node app",
+    "page": "opener https://$npm_package_config_app_name.mybluemix.net/"
+  },
+  "dependencies": {
+    "@cloudant/cloudant": "^3.0.1",
+    "cfenv": "^1.1.0",
+    "express": "^4.16.4",
+    "morgan": "^1.9.1",
+    "serve-favicon": "^2.5.0"
+  },
+  "devDependencies": {
+    "opener": "^1.5.1"
+  }
+}
